@@ -1,0 +1,88 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --color-ink: #07070d;
+  --color-surface: #0f0f1a;
+  --color-accent: #22d3ee;
+  --color-accent-2: #a855f7;
+  --color-accent-3: #f472b6;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--color-ink);
+  color-scheme: dark;
+}
+
+body {
+  /* Sin fondo propio: el de html queda debajo del canvas fijo con z-index negativo. */
+  @apply font-sans text-zinc-200 antialiased;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--color-accent-2) 60%, transparent);
+  color: white;
+}
+
+@utility text-gradient {
+  background-image: linear-gradient(100deg, var(--color-accent), var(--color-accent-2) 50%, var(--color-accent-3));
+  background-clip: text;
+  color: transparent;
+}
+
+@utility glass {
+  background: color-mix(in oklab, var(--color-surface) 55%, transparent);
+  backdrop-filter: blur(14px) saturate(140%);
+  border: 1px solid rgb(255 255 255 / 0.08);
+}
+
+/* Aparición al hacer scroll */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: var(--delay, 0ms);
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Tarjetas con inclinación 3D (controlada desde JS) */
+.tilt {
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.25s ease-out;
+  transform-style: preserve-3d;
+}
+.tilt::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(400px circle at var(--mx, 50%) var(--my, 50%), rgb(168 85 247 / 0.18), transparent 45%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.tilt:hover::before {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .tilt {
+    transform: none;
+  }
+}

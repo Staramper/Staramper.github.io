@@ -1,0 +1,37 @@
+---
+import type { Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+  index: number;
+}
+
+const { project, index } = Astro.props;
+---
+
+<a
+  href={project.repo}
+  target="_blank"
+  rel="noopener"
+  data-reveal
+  data-tilt
+  style={`--delay:${(index % 3) * 90}ms`}
+  class:list={[
+    'tilt glass group relative flex flex-col overflow-hidden rounded-2xl p-6 hover:border-white/20',
+    project.featured && 'md:min-h-64',
+  ]}
+>
+  <div class="mb-4 flex items-center justify-between font-mono text-xs text-zinc-500">
+    <span>{String(index + 1).padStart(2, '0')}</span>
+    {project.featured && <span class="rounded-full bg-accent-2/15 px-2 py-0.5 text-accent-2">destacado</span>}
+  </div>
+  <h3 class="text-xl font-semibold text-white transition-colors group-hover:text-accent">{project.name}</h3>
+  <p class="mt-2 flex-1 text-sm leading-relaxed text-zinc-400">{project.description}</p>
+  <ul class="mt-5 flex flex-wrap gap-2">
+    {project.tags.map((t) => <li class="rounded-md bg-white/5 px-2 py-1 font-mono text-[11px] text-zinc-300">{t}</li>)}
+  </ul>
+  <span
+    class="absolute top-6 right-6 text-zinc-500 opacity-0 transition-all group-hover:translate-x-1 group-hover:opacity-100"
+    aria-hidden="true">↗</span
+  >
+</a>

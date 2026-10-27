@@ -1,0 +1,23 @@
+<div class="pointer-events-none fixed inset-0 -z-10" aria-hidden="true">
+  <canvas id="webgl" class="h-full w-full"></canvas>
+  <!-- Viñeta para mejorar la legibilidad del texto sobre la escena -->
+  <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,var(--color-ink)_95%)]"></div>
+  <!-- Fallback si no hay WebGL -->
+  <div
+    id="webgl-fallback"
+    class="absolute inset-0 hidden bg-[radial-gradient(circle_at_30%_30%,rgb(34_211_238/0.25),transparent_50%),radial-gradient(circle_at_70%_60%,rgb(168_85_247/0.3),transparent_55%)]"
+  >
+  </div>
+</div>
+
+<script>
+  const canvas = document.getElementById('webgl') as HTMLCanvasElement;
+  // Carga diferida: Three.js no bloquea el primer render del contenido.
+  import('../scripts/scene')
+    .then(({ initScene }) => initScene(canvas))
+    .catch((err) => {
+      console.warn('WebGL no disponible:', err);
+      canvas.remove();
+      document.getElementById('webgl-fallback')?.classList.remove('hidden');
+    });
+</script>

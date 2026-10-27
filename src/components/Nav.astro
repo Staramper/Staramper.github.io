@@ -1,0 +1,35 @@
+---
+const links = [
+  { href: '#sobre-mi', label: 'Sobre mí' },
+  { href: '#proyectos', label: 'Proyectos' },
+  { href: '#stack', label: 'Stack' },
+  { href: '#contacto', label: 'Contacto' },
+];
+---
+
+<header class="fixed inset-x-0 top-0 z-50 px-4 pt-4">
+  <nav class="glass mx-auto flex max-w-5xl items-center justify-between rounded-2xl px-5 py-3">
+    <a href="#" class="font-mono text-sm font-medium tracking-tight text-white">
+      <span class="text-gradient">&lt;</span>Staramper<span class="text-gradient">/&gt;</span>
+    </a>
+    <ul class="hidden gap-7 text-sm text-zinc-400 md:flex">
+      {
+        links.map((l) => (
+          <li>
+            <a href={l.href} class="transition-colors hover:text-white">
+              {l.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <a
+      href="https://github.com/Staramper"
+      target="_blank"
+      rel="noopener"
+      class="rounded-lg border border-white/10 px-3 py-1.5 text-sm text-zinc-200 transition hover:border-accent/60 hover:text-white"
+    >
+      GitHub ↗
+    </a>
+  </nav>
+</header>
