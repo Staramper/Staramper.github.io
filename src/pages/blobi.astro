@@ -1,0 +1,125 @@
+---
+import '../styles/blobi.css';
+
+const tips = [
+  ['🖱️', 'Haz clic para hacerle cosquillas'],
+  ['✋', 'Arrástralo y lánzalo'],
+  ['⌨️', 'Escribe para darle de comer'],
+  ['🌀', 'Agita el mouse muy rápido'],
+  ['💜', 'Acarícialo despacito'],
+  ['⬅️➡️', 'Flechas y espacio para saltar'],
+  ['😴', 'Déjalo solo un rato'],
+];
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Blobi, un monstruo 3D interactivo que reacciona a todo lo que haces." />
+    <meta name="theme-color" content="#0d0618" />
+    <link rel="icon" type="image/svg+xml" href="/blobi.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <title>Blobi · Abraham De La Hoya</title>
+  </head>
+  <body>
+    <canvas id="scene" class="fixed inset-0 h-full w-full"></canvas>
+
+    <!-- Capa de efectos (globo, emojis, letras) -->
+    <div id="fx" class="pointer-events-none fixed inset-0 overflow-hidden">
+      <div
+        id="bubble"
+        class="absolute top-0 left-0 max-w-64 rounded-2xl bg-white px-4 py-2.5 text-center text-base font-semibold text-violet-950 opacity-0 shadow-[0_10px_30px_-10px_rgb(167_139_250/0.8)] after:absolute after:-bottom-2 after:left-1/2 after:size-4 after:-translate-x-1/2 after:rotate-45 after:bg-white"
+      >
+      </div>
+    </div>
+
+    <!-- HUD -->
+    <header class="pointer-events-none fixed inset-x-0 top-0 flex items-start justify-between gap-4 p-4">
+      <div class="pointer-events-auto w-56 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-md">
+        <div class="flex items-baseline justify-between">
+          <h1 class="text-2xl font-bold text-white">Blobi</h1>
+          <span id="mood" class="text-sm text-violet-200">😐 Tranquilo</span>
+        </div>
+        <dl class="mt-3 space-y-2 text-xs">
+          <div>
+            <dt class="mb-1 flex justify-between text-violet-300"><span>Felicidad</span><span>💜</span></dt>
+            <dd class="h-2 rounded-full bg-white/10"><div id="bar-happy" class="bar bg-gradient-to-r from-fuchsia-400 to-violet-400"></div></dd>
+          </div>
+          <div>
+            <dt class="mb-1 flex justify-between text-violet-300"><span>Hambre</span><span>🍪</span></dt>
+            <dd class="h-2 rounded-full bg-white/10"><div id="bar-hunger" class="bar bg-gradient-to-r from-amber-300 to-orange-400"></div></dd>
+          </div>
+          <div>
+            <dt class="mb-1 flex justify-between text-violet-300"><span>Energía</span><span>⚡</span></dt>
+            <dd class="h-2 rounded-full bg-white/10"><div id="bar-energy" class="bar bg-gradient-to-r from-cyan-300 to-sky-400"></div></dd>
+          </div>
+        </dl>
+      </div>
+      <div class="pointer-events-auto flex gap-2">
+        <a
+          href="/"
+          class="flex h-11 items-center rounded-xl border border-white/10 bg-white/5 px-4 text-sm font-medium backdrop-blur-md transition hover:bg-white/10"
+          >← Portafolio</a
+        >
+        <button
+          id="mute"
+          class="grid size-11 place-items-center rounded-xl border border-white/10 bg-white/5 text-xl backdrop-blur-md transition hover:bg-white/10"
+          aria-label="Activar o silenciar sonido">🔊</button
+        >
+      </div>
+    </header>
+
+    <footer class="pointer-events-none fixed inset-x-0 bottom-0 flex flex-col items-center gap-3 p-4">
+      <ul class="hidden max-w-3xl flex-wrap justify-center gap-2 md:flex">
+        {
+          tips.map(([icon, text]) => (
+            <li class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-violet-200 backdrop-blur-md">
+              {icon} {text}
+            </li>
+          ))
+        }
+      </ul>
+      <label class="pointer-events-auto flex w-full max-w-sm items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 backdrop-blur-md focus-within:border-violet-400/60">
+        <span aria-hidden="true">🍪</span>
+        <input
+          id="feed"
+          type="text"
+          autocomplete="off"
+          autocapitalize="off"
+          spellcheck="false"
+          placeholder="Escribe para alimentarlo… (prueba «baila»)"
+          class="w-full bg-transparent text-sm text-white placeholder:text-violet-300/60 focus:outline-none"
+        />
+      </label>
+    </footer>
+
+    <div id="no-webgl" class="fixed inset-0 hidden place-items-center p-8 text-center text-violet-200">
+      Tu navegador no soporta WebGL, así que Blobi no puede salir a jugar 😢
+    </div>
+
+    <script>
+      import { initMonster } from '../scripts/monster/main';
+
+      const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
+
+      try {
+        initMonster({
+          canvas: $('scene'),
+          layer: $('fx'),
+          bubble: $('bubble'),
+          moodLabel: $('mood'),
+          bars: { happy: $('bar-happy'), hunger: $('bar-hunger'), energy: $('bar-energy') },
+          muteBtn: $('mute'),
+          feedInput: $('feed'),
+        });
+      } catch (err) {
+        console.error(err);
+        $('no-webgl').classList.replace('hidden', 'grid');
+      }
+    </script>
+  </body>
+</html>

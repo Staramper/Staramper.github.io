@@ -1,0 +1,84 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Fredoka', ui-sans-serif, system-ui, sans-serif;
+  --color-ink: #0d0618;
+  --color-accent: #a78bfa;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 70%, #2e1065 0%, transparent 60%),
+    radial-gradient(circle at 15% 15%, rgb(34 211 238 / 0.12), transparent 40%),
+    radial-gradient(circle at 85% 20%, rgb(244 114 182 / 0.12), transparent 40%),
+    var(--color-ink);
+  color-scheme: dark;
+}
+
+body {
+  @apply font-sans text-violet-100 antialiased select-none;
+}
+
+canvas {
+  touch-action: none;
+}
+
+.fx-particle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.fx-food {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-weight: 700;
+  font-size: 34px;
+  color: #fde047;
+  text-shadow:
+    0 0 12px rgb(253 224 71 / 0.7),
+    0 2px 0 #92400e;
+  will-change: transform;
+}
+
+.fx-ripple {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  margin: -8px 0 0 -8px;
+  border: 2px solid rgb(167 139 250 / 0.8);
+  border-radius: 9999px;
+  animation: ripple 0.7s ease-out forwards;
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(6);
+    opacity: 0;
+  }
+}
+
+#bubble {
+  transition: opacity 0.25s;
+}
+#bubble.pop {
+  animation: pop 0.35s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+@keyframes pop {
+  from {
+    scale: 0.6;
+  }
+  to {
+    scale: 1;
+  }
+}
+
+.bar {
+  @apply h-full rounded-full transition-[width] duration-300;
+}
