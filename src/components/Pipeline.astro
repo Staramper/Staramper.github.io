@@ -1,0 +1,103 @@
+---
+// Diagrama animado de un flujo de automatización con IA.
+const steps = [
+  { label: 'Disparador', detail: 'Webhook · correo · horario' },
+  { label: 'Agente IA', detail: 'Entiende y decide' },
+  { label: 'Acciones', detail: 'APIs · CRM · ERP' },
+  { label: 'Resultado', detail: 'Reporte · aviso · registro' },
+];
+---
+
+<div data-reveal class="glass relative mt-10 overflow-hidden rounded-3xl p-6 sm:p-8">
+  <div class="mb-6 flex items-center gap-2 font-mono text-xs text-zinc-500">
+    <span class="size-2 animate-pulse rounded-full bg-emerald-400"></span>
+    flujo.automatizado — ejecutándose
+  </div>
+  <ol class="relative grid gap-4 md:grid-cols-4 md:gap-0">
+    {
+      steps.map((s, i) => (
+        <li class="relative flex items-center gap-4 md:flex-col md:text-center">
+          {i < steps.length - 1 && (
+            <span class="pipe" aria-hidden="true">
+              <span class="packet" style={`animation-delay:${i * 0.6}s`} />
+            </span>
+          )}
+          <span
+            class:list={[
+              'relative z-10 grid size-14 shrink-0 place-items-center rounded-2xl border font-mono text-sm',
+              i === 1
+                ? 'border-accent-2/60 bg-accent-2/15 text-white shadow-[0_0_30px_-5px_var(--color-accent-2)]'
+                : 'border-white/10 bg-ink text-accent',
+            ]}
+          >
+            {String(i + 1).padStart(2, '0')}
+          </span>
+          <div class="md:mt-3">
+            <p class="font-semibold text-white">{s.label}</p>
+            <p class="text-xs text-zinc-500">{s.detail}</p>
+          </div>
+        </li>
+      ))
+    }
+  </ol>
+</div>
+
+<style>
+  /* Conector vertical en móvil, horizontal en escritorio */
+  .pipe {
+    position: absolute;
+    left: 1.75rem;
+    top: 3.5rem;
+    width: 1px;
+    height: 1rem;
+    background: linear-gradient(var(--color-accent), var(--color-accent-2));
+    opacity: 0.6;
+  }
+  .packet {
+    display: none;
+  }
+  @media (min-width: 768px) {
+    .pipe {
+      left: calc(50% + 2rem);
+      right: calc(-50% + 2rem);
+      top: 1.75rem;
+      width: auto;
+      height: 1px;
+      background: linear-gradient(90deg, var(--color-accent), var(--color-accent-2));
+    }
+    .packet {
+      display: block;
+      position: absolute;
+      top: -3px;
+      left: 0;
+      width: 7px;
+      height: 7px;
+      border-radius: 9999px;
+      background: white;
+      box-shadow:
+        0 0 10px var(--color-accent),
+        0 0 20px var(--color-accent-2);
+      animation: travel 2.4s cubic-bezier(0.6, 0, 0.4, 1) infinite;
+    }
+  }
+  @keyframes travel {
+    0% {
+      left: 0;
+      opacity: 0;
+    }
+    15%,
+    85% {
+      opacity: 1;
+    }
+    100% {
+      left: calc(100% - 7px);
+      opacity: 0;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .packet {
+      animation: none;
+      display: none;
+    }
+  }
+</style>

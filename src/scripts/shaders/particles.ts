@@ -1,6 +1,6 @@
 import { simplexNoise } from './noise.glsl';
 
-// Las partículas interpolan entre 4 formas según uMorph (0 → 3),
+// Las partículas interpolan entre 4 formas (datos, red neuronal, loop, chip) según uMorph (0 → 3),
 // que se controla con el scroll de la página.
 export const particlesVertex = /* glsl */ `
 uniform float uTime;
@@ -10,9 +10,9 @@ uniform float uSize;
 uniform vec3 uMouse;
 
 attribute vec3 aSphere;
-attribute vec3 aKnot;
-attribute vec3 aGalaxy;
-attribute vec3 aCube;
+attribute vec3 aNetwork;
+attribute vec3 aFlow;
+attribute vec3 aChip;
 attribute float aRandom;
 
 varying float vRandom;
@@ -21,9 +21,9 @@ varying float vDepth;
 ${simplexNoise}
 
 vec3 shapeAt(float m) {
-  if (m < 1.0) return mix(aSphere, aKnot, smoothstep(0.0, 1.0, m));
-  if (m < 2.0) return mix(aKnot, aGalaxy, smoothstep(0.0, 1.0, m - 1.0));
-  return mix(aGalaxy, aCube, smoothstep(0.0, 1.0, m - 2.0));
+  if (m < 1.0) return mix(aSphere, aNetwork, smoothstep(0.0, 1.0, m));
+  if (m < 2.0) return mix(aNetwork, aFlow, smoothstep(0.0, 1.0, m - 1.0));
+  return mix(aFlow, aChip, smoothstep(0.0, 1.0, m - 2.0));
 }
 
 void main() {
@@ -38,7 +38,9 @@ void main() {
     snoise(pos * 0.6 + vec3(0.0, t, 10.0)),
     snoise(pos * 0.6 + vec3(20.0, 0.0, t))
   );
-  pos += n * 0.18;
+  // Menos turbulencia en las formas "estructuradas" (red en m=1, chip en m=3).
+  float structured = abs(sin(m * 1.5708));
+  pos += n * mix(0.18, 0.04, structured);
 
   // Repulsión del cursor (en espacio de mundo).
   vec4 world = modelMatrix * vec4(pos, 1.0);

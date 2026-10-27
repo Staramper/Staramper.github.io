@@ -3,10 +3,17 @@ import Layout from '../layouts/Layout.astro';
 import Background3D from '../components/Background3D.astro';
 import Nav from '../components/Nav.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import { projects, stack } from '../data/projects';
+import ServiceCard from '../components/ServiceCard.astro';
+import Pipeline from '../components/Pipeline.astro';
+import { projects, services, stack } from '../data/projects';
 
 const GITHUB = 'https://github.com/Staramper';
 const AVATAR = 'https://avatars.githubusercontent.com/u/136607801?v=4';
+
+const aiProjects = projects.filter((p) => p.category === 'ia');
+const devProjects = projects.filter((p) => p.category === 'dev');
+
+const rotating = ['agentes de IA', 'servidores MCP', 'flujos con n8n', 'integraciones de APIs'];
 ---
 
 <Layout>
@@ -17,31 +24,41 @@ const AVATAR = 'https://avatars.githubusercontent.com/u/136607801?v=4';
     <!-- HERO -->
     <section class="relative flex min-h-svh items-center px-4">
       <div class="mx-auto w-full max-w-5xl">
-        <p data-reveal class="font-mono text-sm text-accent">Hola, soy</p>
+        <p
+          data-reveal
+          class="glass inline-flex items-center gap-2 rounded-full px-3 py-1.5 font-mono text-xs text-zinc-300"
+        >
+          <span class="size-2 animate-pulse rounded-full bg-emerald-400"></span>
+          Especialista en Automatización e IA
+        </p>
         <h1
           data-reveal
           style="--delay:80ms"
-          class="mt-3 text-5xl leading-[0.95] font-bold tracking-tight text-white sm:text-7xl md:text-8xl"
+          class="mt-6 text-5xl leading-[0.95] font-bold tracking-tight text-white sm:text-7xl md:text-8xl"
         >
           Abraham<br /><span class="text-gradient">De La Hoya</span>
         </h1>
         <p data-reveal style="--delay:160ms" class="mt-6 max-w-xl text-lg text-zinc-400 sm:text-xl">
-          Full-stack developer. Construyo aplicaciones web, móviles y experiencias 3D responsivas y escalables.
+          Pongo a trabajar a la IA dentro de los procesos reales de un negocio. Construyo
+          <span
+            id="rotating"
+            data-words={JSON.stringify(rotating)}
+            class="inline-block font-mono text-base text-accent transition-opacity duration-300 sm:text-lg"
+            >{rotating[0]}</span
+          >.
         </p>
         <div data-reveal style="--delay:240ms" class="mt-10 flex flex-wrap gap-3">
           <a
-            href="#proyectos"
+            href="#que-hago"
             class="rounded-xl bg-white px-5 py-3 text-sm font-semibold text-ink transition hover:-translate-y-0.5 hover:shadow-[0_10px_40px_-10px_var(--color-accent-2)]"
           >
-            Ver proyectos
+            Qué automatizo
           </a>
           <a
-            href={GITHUB}
-            target="_blank"
-            rel="noopener"
+            href="#proyectos"
             class="glass rounded-xl px-5 py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5"
           >
-            GitHub ↗
+            Ver proyectos
           </a>
         </div>
       </div>
@@ -73,22 +90,22 @@ const AVATAR = 'https://avatars.githubusercontent.com/u/136607801?v=4';
         <div data-reveal style="--delay:120ms" class="glass rounded-3xl p-8">
           <h2 class="font-mono text-sm text-accent">01 · Sobre mí</h2>
           <p class="mt-4 text-2xl leading-snug font-medium text-white sm:text-3xl">
-            Desarrollador de software desde Durango, México. Me muevo entre el <span class="text-gradient"
-              >frontend, el backend y lo móvil</span
-            >, siempre aprendiendo.
+            Hoy trabajo como <span class="text-gradient">especialista en automatización e IA</span>: conecto modelos
+            de lenguaje, APIs y flujos para que el trabajo repetitivo se haga solo.
           </p>
           <p class="mt-5 text-zinc-400">
-            Además del código, creo y edito video, diseño en Blender e imprimo objetos en 3D, así que me gusta que
-            lo que construyo también se vea y se sienta bien.
+            Vengo del desarrollo full-stack (web, móvil y backend), y eso es lo que me permite llevar la IA de la demo
+            a producción: entiendo los sistemas que hay que conectar, no sólo el modelo. Fuera del código diseño en
+            Blender, imprimo en 3D y edito video.
           </p>
           <dl class="mt-8 grid grid-cols-3 gap-4 border-t border-white/10 pt-6 text-center">
             <div>
-              <dt class="text-xs text-zinc-500">Repos públicos</dt>
-              <dd class="text-gradient text-xl font-bold sm:text-2xl">15</dd>
+              <dt class="text-xs text-zinc-500">Enfoque</dt>
+              <dd class="text-gradient text-xl font-bold sm:text-2xl">IA + Automatización</dd>
             </div>
             <div>
-              <dt class="text-xs text-zinc-500">Plataformas</dt>
-              <dd class="text-gradient text-xl font-bold sm:text-2xl">Web · Móvil</dd>
+              <dt class="text-xs text-zinc-500">Base</dt>
+              <dd class="text-gradient text-xl font-bold sm:text-2xl">Full-stack</dd>
             </div>
             <div>
               <dt class="text-xs text-zinc-500">Ubicación</dt>
@@ -99,20 +116,43 @@ const AVATAR = 'https://avatars.githubusercontent.com/u/136607801?v=4';
       </div>
     </section>
 
+    <!-- QUÉ HAGO -->
+    <section id="que-hago" class="px-4 py-32">
+      <div class="mx-auto max-w-5xl">
+        <div data-reveal class="mb-12">
+          <h2 class="font-mono text-sm text-accent">02 · Qué hago</h2>
+          <p class="mt-3 max-w-2xl text-4xl font-bold text-white sm:text-5xl">
+            IA que <span class="text-gradient">hace cosas</span>, no sólo responde
+          </p>
+        </div>
+        <div class="grid gap-5 sm:grid-cols-2">
+          {services.map((s, i) => <ServiceCard {...s} index={i} />)}
+        </div>
+        <Pipeline />
+      </div>
+    </section>
+
     <!-- PROYECTOS -->
     <section id="proyectos" class="px-4 py-32">
       <div class="mx-auto max-w-5xl">
         <div data-reveal class="mb-12 flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h2 class="font-mono text-sm text-accent">02 · Proyectos</h2>
+            <h2 class="font-mono text-sm text-accent">03 · Proyectos</h2>
             <p class="mt-3 text-4xl font-bold text-white sm:text-5xl">Cosas que he construido</p>
           </div>
           <a href={`${GITHUB}?tab=repositories`} target="_blank" rel="noopener" class="text-sm text-zinc-400 hover:text-white">
             Todos los repos ↗
           </a>
         </div>
+
+        <h3 data-reveal class="mb-5 font-mono text-xs tracking-widest text-zinc-500 uppercase">IA, automatización e integraciones</h3>
         <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project, index) => <ProjectCard project={project} index={index} />)}
+          {aiProjects.map((project, index) => <ProjectCard project={project} index={index} />)}
+        </div>
+
+        <h3 data-reveal class="mt-14 mb-5 font-mono text-xs tracking-widest text-zinc-500 uppercase">Desarrollo full-stack</h3>
+        <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {devProjects.map((project, index) => <ProjectCard project={project} index={aiProjects.length + index} />)}
         </div>
       </div>
     </section>
@@ -121,7 +161,7 @@ const AVATAR = 'https://avatars.githubusercontent.com/u/136607801?v=4';
     <section id="stack" class="px-4 py-32">
       <div class="mx-auto max-w-5xl">
         <div data-reveal class="mb-12">
-          <h2 class="font-mono text-sm text-accent">03 · Stack</h2>
+          <h2 class="font-mono text-sm text-accent">04 · Stack</h2>
           <p class="mt-3 text-4xl font-bold text-white sm:text-5xl">Herramientas favoritas</p>
         </div>
         <div class="grid gap-5 sm:grid-cols-2">
@@ -146,12 +186,12 @@ const AVATAR = 'https://avatars.githubusercontent.com/u/136607801?v=4';
     <!-- CONTACTO -->
     <section id="contacto" class="flex min-h-[80svh] items-center px-4 py-32">
       <div data-reveal class="mx-auto max-w-3xl text-center">
-        <h2 class="font-mono text-sm text-accent">04 · Contacto</h2>
+        <h2 class="font-mono text-sm text-accent">05 · Contacto</h2>
         <p class="mt-4 text-5xl font-bold tracking-tight text-white sm:text-7xl">
-          ¿Construimos <span class="text-gradient">algo</span>?
+          ¿Qué <span class="text-gradient">automatizamos</span>?
         </p>
         <p class="mx-auto mt-6 max-w-lg text-lg text-zinc-400">
-          Estoy abierto a proyectos, colaboraciones y nuevas oportunidades.
+          Si tienes un proceso manual, repetitivo o que depende de copiar y pegar entre sistemas, platiquemos.
         </p>
         <a
           href={GITHUB}
@@ -192,8 +232,25 @@ const AVATAR = 'https://avatars.githubusercontent.com/u/136607801?v=4';
     }
   });
 
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Palabra rotativa del hero
+  const rotating = document.getElementById('rotating');
+  if (rotating && !reducedMotion) {
+    const words: string[] = JSON.parse(rotating.dataset.words ?? '[]');
+    let i = 0;
+    setInterval(() => {
+      rotating.style.opacity = '0';
+      setTimeout(() => {
+        i = (i + 1) % words.length;
+        rotating.textContent = words[i];
+        rotating.style.opacity = '1';
+      }, 300);
+    }, 2600);
+  }
+
   // Inclinación 3D de las tarjetas
-  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  if (!reducedMotion) {
     document.querySelectorAll<HTMLElement>('[data-tilt]').forEach((card) => {
       card.addEventListener('pointermove', (e) => {
         const r = card.getBoundingClientRect();
